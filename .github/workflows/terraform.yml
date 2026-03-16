@@ -31,6 +31,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Create S3 state bucket if not exists
+        run: |
+          aws s3api head-bucket --bucket three-tier-architecture-terraform-state 2>/dev/null || \
+          aws s3api create-bucket --bucket three-tier-architecture-terraform-state --region us-east-1
+          aws s3api put-bucket-versioning \
+            --bucket three-tier-architecture-terraform-state \
+            --versioning-configuration Status=Enabled
+
       - name: Terraform Init
         run: terraform init
 
