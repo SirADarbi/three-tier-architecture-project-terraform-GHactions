@@ -1,6 +1,6 @@
 # Three-Tier AWS Architecture — Terraform
 
-This project provisions a three-tier architecture on AWS using Terraform. I built it to get hands-on with infrastructure as code and to understand how real cloud environments are structured beyond just spinning up a single EC2 instance.
+This project provisions a three-tier architecture on AWS using Terraform.
 
 ---
 
