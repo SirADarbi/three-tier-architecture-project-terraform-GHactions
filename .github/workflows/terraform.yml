@@ -1,0 +1,51 @@
+name: Terraform
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect secrets with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          soft_fail: true
+
+      - name: Terraform Plan
+        run: terraform plan -var="db_password=${{ secrets.DB_PASSWORD }}" -var="db_username=${{ secrets.DB_USERNAME }}" 
+      
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -var="db_password=${{ secrets.DB_PASSWORD }}" -var="db_username=${{ secrets.DB_USERNAME }}" 
+      
