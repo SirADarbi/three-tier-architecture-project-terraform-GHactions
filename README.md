@@ -35,6 +35,20 @@ The infrastructure is split into three layers:
 
 ---
 
+## Modules
+
+Each layer of the architecture lives in its own module under the `modules/` directory. The root `main.tf` calls each module and wires them together by passing outputs from one as inputs to another — for example, the VPC ID and subnet IDs from the `networking` module get passed into the `security`, `web`, `app`, and `data` modules.
+
+This keeps the code organized and means each piece can be reasoned about independently. If you wanted to swap out the database or change the networking setup, you only touch that one module.
+
+Every module has three files:
+
+- `main.tf` — the resources being created
+- `variables.tf` — what the module needs as input
+- `outputs.tf` — what the module exposes to other modules or the root
+
+---
+
 ## CI/CD
 
 Push to `main` and the GitHub Actions pipeline handles the rest. It runs secret scanning with Gitleaks, formats and validates the Terraform code, runs a security scan with tfsec, then plans and applies.
