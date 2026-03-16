@@ -4,15 +4,13 @@ This project provisions a three-tier architecture on AWS using Terraform.
 
 ---
 
-## What it does
+## Overview
 
 The infrastructure is split into three layers:
 
 - **Web tier** — A public-facing Application Load Balancer routes traffic to EC2 instances in an Auto Scaling Group across two availability zones
 - **App tier** — An internal ALB sits in front of a second ASG in private subnets. The web servers talk to the app servers, but nothing from the internet can reach here directly
 - **Data tier** — A PostgreSQL RDS instance in isolated subnets (no route to the internet at all) with Multi-AZ enabled for failover
-
-The networking is set up so that each layer can only talk to the one directly below it. Security groups enforce this at the resource level.
 
 ---
 
