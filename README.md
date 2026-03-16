@@ -14,6 +14,10 @@ The infrastructure is split into three layers:
 
 ---
 
+## Diagram
+
+<img width="1891" height="791" alt="diagram-export-16-03-2026-13_57_50" src="https://github.com/user-attachments/assets/9b676495-f945-4ae6-92af-785a1420794c" />
+
 ## Project layout
 
 ```
